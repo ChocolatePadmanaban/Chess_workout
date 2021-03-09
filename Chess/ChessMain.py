@@ -34,6 +34,8 @@ def main():
 
     validMoves = gs.getValidMoves()
     moveMade = False #flag variable for when a move is made 
+
+
     loadImages() #only do this once, before the while loop 
     running=True
     sqSelected = () #no square is selected , keep track of the last click of the user (tuple: row, col)
