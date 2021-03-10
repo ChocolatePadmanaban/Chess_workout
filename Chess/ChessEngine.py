@@ -16,10 +16,13 @@ class GameState():
             ['--','--','--','--','--','--','--','--'],
             ['--','--','--','--','--','--','--','--'],
             ['--','--','--','--','--','--','--','--'],
-            ['--','--','--','--','--','--','--','--'],
+            ['--','--','--','bp','--','--','--','--'],
             ['wp','wp','wp','wp','wp','wp','wp','wp'],
             ['wR','wN','wB','wQ','wK','wB','wN','wR']
         ]
+
+        self.moveFunctions = {'p': self.getPawnMoves,'K': self.getKingMoves,'N':self.getKnightMoves,
+        'R': self.getRookMoves,'Q':self.getQueenMoves,'B': self.getQueenMoves}
         self.whiteToMove = True
         self.moveLog = []
 
@@ -56,12 +59,9 @@ class GameState():
         for r in range(len(self.board)): # number of rows 
             for c in range(len(self.board[r])):# numbers of colums 
                 turn = self.board[r][c][0]
-                if (turn == 'w' and self.whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                if (turn == 'w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
                     piece = self.board[r][c][1]
-                    if piece == 'p':
-                        self.getPawnMoves(r,c,moves)
-                    elif piece == 'R':
-                        self.getRookMoves(r,c,moves)
+                    self.moveFunctions[piece](r,c,moves)
         
         return moves
     
@@ -69,9 +69,42 @@ class GameState():
         """
         Get all the pawn moves for the pawn located at row, col and add those moves to the list 
         """
-        pass 
+        if self.whiteToMove: #white pawn moves 
+            if self.board[r-1][c]=='--': #1 square pawn advance 
+                moves.append(Move((r,c), (r-1,c),self.board))
+                if r==6 and self.board[r-2][c]== '--': #2 square advance 
+                    moves.append(Move((r,c),(r-2,c),self.board) )
+            if c-1 >=0:
+                if self.board[r-1][c-1][0] == 'b': #enemy piece to capture 
+                    moves.append(Move((r,c),(r-1,c-1),self.board))
+            if c+1 <=7: # captures the right
+                if self.board[r-1][c+1][0]=='b':
+                    moves.append(Move((r,c), (r-1,c+1), self.board))
+        else:
+            pass
+
     
     def getRookMoves(self, r ,c , moves):
+        """
+        Get all the rook moves for the pawn located at row, col and add those moves to the list 
+        """
+        pass 
+    def getBishopMoves(self, r ,c , moves):
+        """
+        Get all the rook moves for the pawn located at row, col and add those moves to the list 
+        """
+        pass 
+    def getKnightMoves(self, r ,c , moves):
+        """
+        Get all the rook moves for the pawn located at row, col and add those moves to the list 
+        """
+        pass 
+    def getKingMoves(self, r ,c , moves):
+        """
+        Get all the rook moves for the pawn located at row, col and add those moves to the list 
+        """
+        pass 
+    def getQueenMoves(self, r ,c , moves):
         """
         Get all the rook moves for the pawn located at row, col and add those moves to the list 
         """
@@ -97,7 +130,6 @@ class Move():
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
         self.moveID = self.startRow*1000 +self.startCol *100 + self.endRow*10 + self.endCol
-        print(self.moveID)
 
 
     def __eq__(self,other):
